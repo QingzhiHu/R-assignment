@@ -1,0 +1,386 @@
+---
+title: "Assignment 1: Group 03"
+author:
+- "Merlijne Keuss, S3471055" 
+- "Qingzhi Hu, S3343243"
+date: "10 - 2 - 2018"
+output: pdf_document
+params:
+  s1: seed
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE) # these are the global parameters. 
+```   
+
+## Exercise 1
+In this exercise, you will learn to create vectors in R. Do not use any loops for this exercise.
+
+ a) Construct a vector z1 with elements 1, 1, 2, 3, 5, 8, 13, 21.
+```{r ex1a}  
+z1 <- c(1,1,2,3,5,8,13,21)
+z1
+```
+
+ b) Return the length of this vector.  
+```{r ex1b} 
+length(z1)
+```
+
+ c) Construct a vector z2 with the elements (1,2,3,...,1000).
+```{r ex1c} 
+z2 <- 1:1000
+z2
+```
+
+ d) Construct a vector z3 with elements (0,5,10,...,5000)
+```{r ex1d} 
+z3 <- seq(0, 5000, by=5)
+z3
+```
+
+ e) Construct a vector z4 with elements (1,1,1,1,2,2,2,2,...50,50,50)
+```{r ex1e}
+z4 <- rep(1:50, each=4)
+z4
+```
+
+ f) Construct a vector z5 with elements (1,2,2,3,3,3,...,10,10,10,10,10,10,10,10,10,10) 
+```{r ex1f} 
+z5 <- rep(1:10, 1:10)
+z5
+```
+
+ g) Construct a vector z6 with elements (3,4,4,5,6,6,7,8,8,...,50,50)
+```{r ex1g} 
+z6 <- rep(3:50, rep(1:2,24))
+z6
+```  
+
+ h) Use z6 to create a boolen vector z7 with elements equal to TRUE if the value of the element is larger than 14, and FALSE if the value of the element is smaller than or equal to 14. 
+```{r ex1h} 
+z7 <- z6 > 14
+z7
+``` 
+
+ i) In mathematics, vectors can be added only if they have the same length. Is that also true in R? Give a general rule. 
+What about subtraction, multiplication and division? 
+What about adding a value to a vector: z8 <- z1 + 1?
+What about matrix multiplication?
+
+  In R, vectors of the same length can be added, multiplied, subtracted and divided. When The vectors are of a different length, R calculates the the sum, multiplication and division by using the shortest (of the two) vectors again. This is called the recycling rule as R recycles the shorter vectore to complete the calcultation. 
+```{r ex1i}  
+z8 <- z1 + 1
+z8
+``` 
+  z8 under this scenario will be a vector with elements (2,2,3,4,6,9,14,22). It adds 1 to every element of z1.
+
+  For matrix multiplication, the number of columns of the first matrix has to be in accordance with (equal to) the number of rows of the second matrix. For instance, matrix A has m rows and n columns, then matrix B has to have n rows in order to do matrix multiplication of AB. In R, the same rule applies, otherwise you will get error message reporting 'non-conformable arguments'.
+
+## Exercise 2 
+ 
+  a) Printing 1:2 and c(1,2) gives the same output. What's the difference? What about 5 and 5L? HINT: Use the function typeof() to find the type of an R object.
+```{r ex2a1}
+print(1:2)
+print(c(1,2))
+typeof(1:2)
+typeof(c(1,2))
+```
+  The above-standing code gives the same output but there is a difference between them. The fist one represents the code print integers 1 and 2. The second code is print a double-precision vector.
+```{r ex2a2}
+print(5)
+print(5L)
+typeof(5)
+typeof(5L)
+```
+  The same holds for 5 and 5L. 5L is a double-precision vector and object 5 is an integer. 
+
+  b) Give an example of each of the 4 common types of atomic vectors in R: boolean/logical, integer, numeric/double and character.
+```{r ex2b}
+# logical vector
+u1 <- c(TRUE, FALSE, TRUE, FALSE) 
+u1
+
+# integer vector
+u2 <- c(1L, 2L, 3L)
+u2
+
+# numeric vector
+u3 <- c(1,2,3) 
+u3
+
+# character vector
+u4 <- c("Red", "Wite", "Blue")
+u4
+```
+
+  c) What happens to the type if you combine vectors of different types? Find a general rule that covers all four of the common types. Explain why this rule makes sense.
+```{r ex2c}
+c(u1, u2)
+c(u2, u3)
+c(u3, u4)
+```
+  If vectors of two different types are combined R will coerce these two type into one of them. R will create a resulting vector of the type that is the most unchangeable of the two types. In general the dominant type will coerce the more recessive type of vector according to the coerce rule. This rule goes: logical -> integer -> numeric -> complex -> character. 
+
+  But if as.<class-name> for example as.numeric() is used then, you can coerce vectors explicitely, if only it is possible. 
+
+  d) Notice that vectors cannot contain more complicated datastructures, such as other vectors. 
+So c(1, c(2 ,list(3,4))). How many elements does this list have? Why?
+```{r ex2d}
+v1 <- c(1, c(2 ,list(3,4)))
+typeof(v1)
+length(v1)
+```
+  The lenth of this list is 4. Since the first number is 1 the second is the list beginning of two and the third is a list consisting of two numbers, which makes in total four elements. 
+
+  e) Consider the list x: 
+  x <- list(1:3, list("a"), list(c(TRUE, FALSE, TRUE), c(2.3, 5.9)))
+Describe its structure using str(), which provides more information than typeof(). Use unlist() on x and describe its resulting structure. What did unlist do? How many elements does x Have? And after unlisting?
+```{r ex2e}
+x <- list(1:3, list("a"), list(c(TRUE, FALSE, TRUE), c(2.3, 5.9)))
+x
+str(x)
+unlist(x)
+```
+  This is a list of 3 terms: an integer list, a character list and a list consisting of two lists (a logical and a numerical list). To be more specific, it begins with integers vector 1,2,3 (int[1:3]) followed by the second term which is the list "a" (character list). The third term is the logical list consisting tree elements of true and false and a list containing the numbers 2.3 and 5.9 (num[1:2] 2.3 5.9). 
+
+  The number of elements is 3 befor unlisting. The function unlist simplifies the list (following the 'coerce rule' explained in 2c).) and takes the objects out of all of the containing list within the list. After unlisting the list is a character list with 9 elements.
+  
+## Exercise 3
+
+  a) Familiarize yourself with the set.seed() function: pick a seed and generate 10 values from a uniform distribution. Re-set the seed and confirm that you find the same 10 values.
+```{r ex3a}
+set.seed(123)
+runif(10, min=1, max=10)
+
+# reset the seed and find the same 10 values
+set.seed(123)
+runif(10, min=1, max=10)
+```
+
+  b) If you forget to set a seed, there is no way to reproduce the results other than trying out different seeds until they match your results. Suppose we drew two zeros from a Poisson distribution with parameter 1.6. Find a seed that reproduces this result. (This is actually closely related to the process used to mine Bitcoin).
+
+  Process to find is shown below: run the following code for several times until you find the output is '0,0', then the s1 is the seed to reproduce this result. 
+```{r ex3b}
+set.seed(28)
+rpois(2, lambda = 1.6)
+```
+
+  c) Construct a vector y1 containing 1000 draws from a Poisson distribution with parameter 2.2. What are the sum and mean of y1?
+```{r ex3c}
+set.seed(123)
+y1 <- rpois(1000, lambda = 2.2)
+y1
+sum(y1)
+mean(y1)
+```
+
+  d) Construct a vector y2 with 1000 draws from a Poisson distribution with parameter 8.1. Construct vector y3 containing the elements of both y1 and y2. What do you expect the mean and sum of y3 to be? How large is the difference between the expected mean and actual mean of y3?
+```{r ex3d_a} 
+set.seed(123)
+y2 <- rpois(1000, lambda = 8.1)
+y2
+y3 <- c(y1, y2)
+y3
+mean(y3)
+sum(y3)
+```
+  It is expected that the mean and sum of y3 should be 1/2(the mean of y1 + the mean of y2) since y1 and y2 are of the same length.
+```{r ex3d_b}  
+mean(y1)
+mean(y2)
+expected_mean <- (mean(y1) + mean(y2))/2
+expected_mean
+mean(y3)
+```
+  Run the above code. The expected the mean of y3 is equal to the actual mean of y3.
+
+  e) Draw 20 letters with equal probability with replacement from the built-in R vector letters and sort them counter-alphabetically.
+```{r ex3e}
+set.seed(123)
+# Note: The default 'prob = NULL' gives equal probabilities
+sample_letters <- sample(letters[1:26], 20, replace = TRUE)
+sample_letters
+sort(sample_letters, decreasing = TRUE)
+```
+
+## Exercise 4
+
+We look at subsetting vectors. Make sure your code still runs if another seed is used. Start by constructing a vector x1 containing 20 random elements drawn from a uniform distribution with parameters 1 and 10.
+
+  a) Return the fifth element of x1 in two ways: by subsetting it with a boolean vector and by subsetting it with an integer vector.
+```{r ex4a}
+# construct the vector x1
+set.seed(123)
+x1 <- runif(20, min = 1, max = 10)
+x1
+
+# subset x1 with a boolean vector
+x1[c(rep(FALSE, 4), TRUE, rep(FALSE, 15))]
+
+# subset x1 with an integer vector
+x1[5]
+```
+
+  b) Return elements 10 to 15 of x1 using a boolean and integer vector.
+```{r ex4b}
+# subset x1 with a boolean vector
+x1[c(rep(FALSE, 9), rep(TRUE,6), rep(FALSE,5))]
+
+# subset x1 with an integer vector
+x1[10:15]
+```
+
+  c) Return the odd elements of x1 using a boolean and integer vector.
+```{r ex4c}
+# return the odd elements by using a boolean vector
+x1[x1 %% 2 == 1]
+
+# return the odd elements by using an integer vector
+x1[which(x1 %% 2 == 1, arr.in = TRUE)]
+```
+
+  d) Return the elements of x1 that are larger than 0.5 using a boolean and integer vector.
+```{r ex4d}
+# by using a boolean vector
+x1[x1 > 0.5]
+
+# by using an integer vector
+x1[which(x1 > 0.5, arr.in = TRUE)]
+```
+
+  e) Use the seed 2038404 for this subquestion. Draw a value n1 from a Poisson distribution with parameter 50. Let n2 <- n1 + 50. Construct a vector grades containing n2 drawings from a uniform distribution with parameters 1 and 10. Round the elements of this vector up to one decimal place.
+```{r ex4e}
+# set seed
+set.seed(2038404)
+
+# draw n1 and n2
+n1 <- rpois(1, lambda = 50)
+n1
+n2 <- n1 + 50
+n2
+
+# get and round grades vector
+grades <- runif(n2, min = 1, max = 10)
+grades
+grades <- round(grades, 1)
+grades
+```
+
+f) Suppose the vector grades corresponds to the grades of a midterm. Find the grades of the students that passed the midterm (grade >= 5.5). How many students passed the midterm? What is the average grades of the students that passed the midterm?
+```{r ex4f}
+# grades of student that passed the midterm
+grades[grades >= 5.5]
+
+# the number of students passed the midterm
+length(grades[grades > 5.5])
+
+# average grades of students that passed the midterm
+mean(grades[grades > 5.5])
+```
+
+g) Suppose the index in the vector corresponds to the student number. Find the student numbers of the students who failed the midterm (grade < 5.5). Find the student with the highest student number to fail the midterm.
+```{r ex4g}
+# the student numbers of the students who failed the midterm
+which(grades < 5.5, arr.in = TRUE)
+
+# the student with the highest student number to fail the midterm
+max(which(grades < 5.5))
+```
+
+h) Which student has the lowest grades and what is his grade?
+```{r ex4h}
+# the student number of the student with the lowest grades
+which(grades == min(grades))
+
+# his grade
+grades[which(grades == min(grades))]
+```
+
+i) Find student numbers of the students with the 10 lowest and highest grades.
+```{r ex4i}
+# student numbers of the students with the 10 lowest grades
+grades_sorted_low <- sort(x = grades, decreasing = FALSE, index.return = TRUE)
+grades_sorted_low
+grades_sorted_low$ix[1:10]
+
+# student numbers of the students with the 10 highest grades
+grades_sorted_high <- sort(x = grades, decreasing = TRUE, index.return = TRUE)
+grades_sorted_high
+grades_sorted_high$ix[1:10]
+```
+
+## Exercise 5
+
+  a) Construct a vector with 100 values drawn from a Poisson distribution with parameter lambda = 2.2. Then restructure these values into a 10 × 10 matrix A.
+
+```{r ex5a}
+set.seed(123)
+vector <- rpois(100, lambda = 2.2)
+vector
+A <- matrix(vector, nrow = 10, ncol = 10)
+A
+```  
+
+  b) Compute the inverse of the matrix AT A.
+```{r ex5b}
+t(A) %*% A
+```
+
+  c) Construct a matrix B by adding to A a row with the numbers 1, 2, . . . , 10. This row should be the first row of the matrix. Then construct a matrix C by adding to B a row with the numbers 10, 9, . . . , 1. This row should become the last row of the matrix.
+```{r ex5c}
+B <- rbind(1:10, A)
+B
+C <- rbind(B, seq(from = 10, to = 1))
+C
+```
+
+  d) Construct a matrix D by adding to C a column containing the numbers 1,2,...,12. This column should become the first column of the matrix. Then construct a matrix E by adding a column with the numbers 2, 4, . . . 24. This column should become the last column of the matrix.
+```{r ex5d}
+D <- cbind(1:12, C)
+D
+E <- cbind(D, seq(2, 24, by=2))
+E
+```
+
+  e) Construct a vector with all elements of E that are larger than 1.
+```{r ex5e}
+# vector E1 consisting of all elements of E that are larger than 1
+E1 <- E[which(E > 1)]
+E1
+```
+
+  f) Compute the 12 × 12-matrix ab, where a stands for the first column of the matrix E and b for the first row of E.
+```{r ex5f}
+# the first column of the matrix E
+a <- matrix(E[,1], nrow = 12, ncol = 1)
+a
+
+# the first row of the matrix E
+b <- matrix(E[1,], nrow = 1, ncol = 12)
+b
+
+# the matrix ab
+ab <- a %*% b
+ab
+```
+
+  g) Compute the number of elements in the matrix ab that are smaller than 3.
+```{r ex5g}
+length(which(ab < 3))
+```  
+
+  h) Use a single built-in function to find the sums of each column of E. Do the same for all rows.
+```{r ex5h}
+# sums of each column
+colSums(ab)
+
+# sums of each rows
+rowSums(ab)
+```
+
+  i) Use a built-in function to return the diagonal elements of E.
+```{r ex5i}
+# the diagonal elements of E
+diag(ab)
+```
